@@ -1,0 +1,111 @@
+    <!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathe-Abenteuer für Lotta</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <!-- Startbildschirm -->
+    <div id="start-screen" class="screen active">
+        <h1>🌟 Lottas Mathe-Abenteuer 🌟</h1>
+        
+        <!-- Lotta Avatar -->
+        <div class="avatar-container">
+            <img src="assets/lotta-avatar.png" alt="Lotta Avatar" class="avatar">
+        </div>
+        
+        <!-- Schlauberger-Modus Toggle -->
+        <div class="toggle-container">
+            <label class="toggle-label">
+                <input type="checkbox" id="smart-mode-toggle">
+                <span class="toggle-text">Schlauberger-Modus</span>
+                <span class="toggle-info">(5 oder 10 Aufgaben)</span>
+            </label>
+        </div>
+
+        <!-- Level-Auswahl -->
+        <div class="level-grid">
+            <button class="level-card" data-level="1">
+                <div class="level-icon">🐌</div>
+                <div class="level-title">Level 1</div>
+                <div class="level-desc">Bis 10</div>
+            </button>
+
+            <button class="level-card" data-level="2">
+                <div class="level-icon">🐢</div>
+                <div class="level-title">Level 2</div>
+                <div class="level-desc">Bis 20</div>
+            </button>
+
+            <button class="level-card" data-level="3">
+                <div class="level-icon">🦊</div>
+                <div class="level-title">Level 3</div>
+                <div class="level-desc">Bis 20 mit Sprung</div>
+            </button>
+
+            <button class="level-card" data-level="4">
+                <div class="level-icon">🐺</div>
+                <div class="level-title">Level 4</div>
+                <div class="level-desc">Bis 100</div>
+            </button>
+
+            <button class="level-card" data-level="5">
+                <div class="level-icon">🦎</div>
+                <div class="level-title">Level 5</div>
+                <div class="level-desc">Bis 100 mit Sprung</div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Aufgaben-Bildschirm -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <button id="back-to-menu-button" class="btn-back">← Zurück</button>
+            <div class="level-badge">
+                <span id="current-level-icon" class="current-icon">🐌</span>
+                <span id="smart-badge" class="hidden">👓</span>
+            </div>
+            <div class="progress">Aufgabe <span id="question-number">1</span> von <span id="total-questions">5</span></div>
+        </div>
+
+        <div class="question-container">
+            <div class="equation">
+                <span id="equation-text">5 + 3 = ?</span>
+            </div>
+            
+            <input type="number" id="answer-input" placeholder="?" autocomplete="off">
+            
+            <button id="check-button" class="btn-primary">Prüfen</button>
+            <button id="next-button" class="btn-primary hidden">Weiter</button>
+        </div>
+
+        <div id="feedback" class="feedback hidden"></div>
+    </div>
+
+    <!-- Ergebnis-Bildschirm -->
+    <div id="result-screen" class="screen">
+        <h1>🎉 Super gemacht, Lotta! 🎉</h1>
+        
+        <div class="result-summary">
+            <p class="result-text">Du hast <span id="correct-count">0</span> von <span id="result-total">5</span> Aufgaben richtig gelöst!</p>
+        </div>
+
+        <div class="badge-earned">
+            <p>Du hast ein neues Abzeichen verdient:</p>
+            <div class="big-badge" id="earned-badge">🐌</div>
+        </div>
+
+        <div class="badge-collection">
+            <h3>Deine Sammlung:</h3>
+            <div id="badge-list" class="badge-list"></div>
+        </div>
+
+        <button id="restart-button" class="btn-primary">Zurück zum Start</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
