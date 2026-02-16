@@ -14,17 +14,20 @@ const levels = {
     2: { max: 20, icon: '🐢', name: 'Schildkröte', tenCross: false },
     3: { max: 20, icon: '🦊', name: 'Fuchs', tenCross: true },
     4: { max: 100, icon: '🐺', name: 'Wolf', tenCross: false },
-    5: { max: 100, icon: '🦎', name: 'Chamäleon', tenCross: true }
+    5: { max: 100, icon: '🦎', name: 'Chamäleon', tenCross: true },
+    6: { max: 18, min: 11, maxSubtrahend: 9, icon: '🔧', name: 'Caspers Werkstatt 1', subtractionOnly: true, resultBelow10: true },
+    7: { max: 20, min: 11, icon: '🔧', name: 'Caspers Werkstatt 2', subtractionOnly: true, resultBelow10: true }
 };
 
 // DOM Elemente
 const startScreen = document.getElementById('start-screen');
+const workshopMenu = document.getElementById('workshop-menu');
 const gameScreen = document.getElementById('game-screen');
 const resultScreen = document.getElementById('result-screen');
 const smartModeToggle = document.getElementById('smart-mode-toggle');
-const levelCards = document.querySelectorAll('.level-card');
 const checkButton = document.getElementById('check-button');
 const nextButton = document.getElementById('next-button');
+const casperExplainButton = document.getElementById('casper-explain-button');
 const answerInput = document.getElementById('answer-input');
 const feedback = document.getElementById('feedback');
 
@@ -34,15 +37,37 @@ smartModeToggle.addEventListener('change', function() {
     totalQuestions = smartMode ? 10 : 5;
 });
 
-levelCards.forEach(card => {
+// Level-Auswahl im Hauptmenü
+document.querySelectorAll('#start-screen .level-card').forEach(card => {
+    card.addEventListener('click', function() {
+        const level = this.dataset.level;
+        if (level === 'workshop') {
+            // Zeige Werkstatt-Untermenü
+            startScreen.classList.remove('active');
+            workshopMenu.classList.add('active');
+        } else {
+            currentLevel = parseInt(level);
+            startGame();
+        }
+    });
+});
+
+// Level-Auswahl im Werkstatt-Untermenü
+document.querySelectorAll('#workshop-menu .level-card').forEach(card => {
     card.addEventListener('click', function() {
         currentLevel = parseInt(this.dataset.level);
         startGame();
     });
 });
 
+document.getElementById('back-from-workshop-button').addEventListener('click', function() {
+    workshopMenu.classList.remove('active');
+    startScreen.classList.add('active');
+});
+
 checkButton.addEventListener('click', checkAnswer);
 nextButton.addEventListener('click', nextQuestion);
+casperExplainButton.addEventListener('click', showCasperExplanation);
 document.getElementById('restart-button').addEventListener('click', restartGame);
 document.getElementById('back-to-menu-button').addEventListener('click', backToMenu);
 
@@ -85,7 +110,7 @@ function startGame() {
 // Aufgabe generieren - VERBESSERT
 function generateQuestion() {
     const level = levels[currentLevel];
-    const isAddition = Math.random() < 0.5;
+    const isAddition = level.subtractionOnly ? false : Math.random() < 0.5;
     
     let a, b, attempts = 0;
     const maxAttempts = 1000;
@@ -107,9 +132,11 @@ function generateQuestion() {
         
     } else {
         // Subtraktion generieren
+        const minValue = level.min || 2; // Für Level 6/7: mindestens 11
+        const maxB = level.maxSubtrahend || a; // Für Level 6: max 9
         do {
-            a = randomInt(2, level.max);
-            b = randomInt(1, a);
+            a = randomInt(minValue, level.max);
+            b = randomInt(1, Math.min(a, maxB));
             attempts++;
         } while (!isValidSubtraction(a, b, level) && attempts < maxAttempts);
         
@@ -129,7 +156,14 @@ function generateQuestion() {
     nextButton.classList.add('hidden');
     feedback.classList.add('hidden');
     wrongAttempts = 0;
-    
+
+    // Casper-Button nur in Level 6 und 7 anzeigen
+    if (currentLevel === 6 || currentLevel === 7) {
+        casperExplainButton.classList.remove('hidden');
+    } else {
+        casperExplainButton.classList.add('hidden');
+    }
+
     // Fortschritt aktualisieren
     document.getElementById('question-number').textContent = currentQuestion;
 }
@@ -163,6 +197,12 @@ function isValidAddition(a, b, level) {
 // Validierung für Subtraktion
 function isValidSubtraction(a, b, level) {
     if (a < b) return false;
+    
+    // Level 6: Capers Werkstatt - nur Subtraktion mit Ergebnis unter 10
+    if (level.resultBelow10) {
+        const result = a - b;
+        return result < 10 && result > 0;
+    }
     
     if (level.max <= 20) {
         if (level.tenCross) {
@@ -232,12 +272,50 @@ function getExplanation() {
     const a = parseInt(parts[0]);
     const operator = parts[1];
     const b = parseInt(parts[2]);
-    
+
     if (operator === '+') {
         return `Lotta, versuch es so: Du hast ${a} und legst ${b} dazu. Zähle langsam weiter von ${a}... `;
     } else {
         return `Lotta, versuch es so: Du hast ${a} und nimmst ${b} weg. Zähle langsam zurück von ${a}... `;
     }
+}
+
+// Caspers Erklärung für Level 6 (Werkstatt)
+function showCasperExplanation() {
+    const equationText = document.getElementById('equation-text').textContent;
+    const parts = equationText.split(' ');
+    const a = parseInt(parts[0]);
+    const b = parseInt(parts[2]);
+
+    // Berechne die Schritte
+    const onesA = a % 10; // Einerstelle von a
+    const toTen = onesA; // Wie viel bis zum Zehner
+    const rest = b - toTen; // Der Rest, der noch abgezogen werden muss
+    const result = a - b; // Das Ergebnis
+    const loveNumber = 10 - result; // Die verliebte Zahl (für die letzte Subtraktion)
+
+    let explanation = `🔧 Casper erklärt: "Hör zu, Lotta!\n\n`;
+    explanation += `Wir haben ${a} - ${b}.\n\n`;
+
+    explanation += `**Schritt 1:** Erst subtrahieren wir bis zum Zehner:\n`;
+    explanation += `${a} - ${toTen} = 10\n\n`;
+
+    if (rest > 0) {
+        explanation += `**Was bleibt jetzt übrig?**\n`;
+        explanation += `Wir haben schon ${toTen} abgezogen. Jetzt müssen wir die ${toTen} von der ${b} abziehen.\n`;
+        explanation += `${b} - ${toTen} = ${rest}\n\n`;
+
+        explanation += `**Schritt 2:** Jetzt müssen wir nur noch die ${rest} von der 10 abziehen.\n`;
+        explanation += `Das geht einfach, oder? Denk einfach an die verliebte Zahl von ${rest}, das ist doch die ${loveNumber}!\n`;
+        explanation += `10 - ${rest} = ${result}\n\n`;
+    } else {
+        explanation += `Fertig! Wir sind genau am Zehner angekommen.\n`;
+        explanation += `${toTen} ist die verliebte Zahl von ${result}!\n\n`;
+    }
+
+    explanation += `**Das Ergebnis ist ${result}!**"`;
+
+    showFeedback(explanation, 'explanation');
 }
 
 // Nächste Aufgabe
@@ -389,7 +467,7 @@ function debugTestLevel(levelNum, samples = 50) {
 
 function debugTestAllLevels() {
     console.log('🔍 STARTE DEBUG-TEST FÜR ALLE LEVELS...\n');
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 6; i++) {
         debugTestLevel(i, 50);
     }
     console.log('✅ DEBUG-TEST ABGESCHLOSSEN!');

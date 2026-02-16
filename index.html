@@ -57,7 +57,34 @@
                 <div class="level-title">Level 5</div>
                 <div class="level-desc">Bis 100 mit Sprung</div>
             </button>
+
+            <button class="level-card" data-level="workshop">
+                <div class="level-icon">🔧</div>
+                <div class="level-title">Level 6</div>
+                <div class="level-desc">Caspers Werkstatt</div>
+            </button>
         </div>
+    </div>
+
+    <!-- Werkstatt-Untermenü -->
+    <div id="workshop-menu" class="screen">
+        <h1>🔧 Caspers Werkstatt 🔧</h1>
+
+        <div class="level-grid">
+            <button class="level-card" data-level="6">
+                <div class="level-icon">🔧</div>
+                <div class="level-title">Werkstatt 1</div>
+                <div class="level-desc">Bis 18 (max -9)</div>
+            </button>
+
+            <button class="level-card" data-level="7">
+                <div class="level-icon">🔧</div>
+                <div class="level-title">Werkstatt 2</div>
+                <div class="level-desc">Bis 20</div>
+            </button>
+        </div>
+
+        <button id="back-from-workshop-button" class="btn-back">← Zurück zum Hauptmenü</button>
     </div>
 
     <!-- Aufgaben-Bildschirm -->
@@ -77,9 +104,10 @@
             </div>
             
             <input type="number" id="answer-input" placeholder="?" autocomplete="off">
-            
+
             <button id="check-button" class="btn-primary">Prüfen</button>
             <button id="next-button" class="btn-primary hidden">Weiter</button>
+            <button id="casper-explain-button" class="btn-secondary hidden">Erkläre es mir, Casper</button>
         </div>
 
         <div id="feedback" class="feedback hidden"></div>
