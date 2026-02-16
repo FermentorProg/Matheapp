@@ -207,7 +207,7 @@ function checkAnswer() {
         showFeedback(getRandomPraise(), 'success');
         answerInput.disabled = true;
         checkButton.classList.add('hidden');
-        nextButton.classList.remove('hidden');
+        nextButton.classList.remove('hidden') ;
         
     } else {
         wrongAttempts++;
