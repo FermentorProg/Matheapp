@@ -133,9 +133,9 @@ function generateQuestion() {
     } else {
         // Subtraktion generieren
         const minValue = level.min || 2; // Für Level 6/7: mindestens 11
-        const maxB = level.maxSubtrahend || a; // Für Level 6: max 9
         do {
             a = randomInt(minValue, level.max);
+            const maxB = level.maxSubtrahend || a; // Für Level 6: max 9
             b = randomInt(1, Math.min(a, maxB));
             attempts++;
         } while (!isValidSubtraction(a, b, level) && attempts < maxAttempts);
