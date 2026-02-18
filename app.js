@@ -15,8 +15,8 @@ const levels = {
     3: { max: 20, icon: '🦊', name: 'Fuchs', tenCross: true },
     4: { max: 100, icon: '🐺', name: 'Wolf', tenCross: false },
     5: { max: 100, icon: '🦎', name: 'Chamäleon', tenCross: true },
-    6: { max: 18, min: 11, maxSubtrahend: 9, icon: '🔧', name: 'Caspers Werkstatt 1', subtractionOnly: true, resultBelow10: true },
-    7: { max: 20, min: 11, icon: '🔧', name: 'Caspers Werkstatt 2', subtractionOnly: true, resultBelow10: true }
+    6: { max: 18, min: 11, maxSubtrahend: 9, icon: '<img src="assets/Chamaeleon.png" alt="Casper" class="game-icon-img">', name: 'Caspers Werkstatt 1', subtractionOnly: true, resultBelow10: true },
+    7: { max: 20, min: 11, icon: '<img src="assets/ChamaeleonBrille.png" alt="Casper mit Brille" class="game-icon-img">', name: 'Caspers Werkstatt 2', subtractionOnly: true, resultBelow10: true }
 };
 
 // DOM Elemente
@@ -89,7 +89,7 @@ function startGame() {
     wrongAttempts = 0;
     
     // Icon im Spielbildschirm setzen
-    document.getElementById('current-level-icon').textContent = levels[currentLevel].icon;
+    document.getElementById('current-level-icon').innerHTML = levels[currentLevel].icon;
     document.getElementById('total-questions').textContent = totalQuestions;
     
     // Schlauberger-Badge anzeigen
@@ -102,6 +102,7 @@ function startGame() {
     
     // Screens wechseln
     startScreen.classList.remove('active');
+    workshopMenu.classList.remove('active');
     gameScreen.classList.add('active');
     
     generateQuestion();
@@ -292,7 +293,7 @@ function showCasperExplanation() {
     const toTen = onesA; // Wie viel bis zum Zehner
     const rest = b - toTen; // Der Rest, der noch abgezogen werden muss
     const result = a - b; // Das Ergebnis
-    const loveNumber = 10 - result; // Die verliebte Zahl (für die letzte Subtraktion)
+    const loveNumber = 10 - rest; // Die verliebte Zahl (für die letzte Subtraktion)
 
     let explanation = `🔧 Casper erklärt: "Hör zu, Lotta!\n\n`;
     explanation += `Wir haben ${a} - ${b}.\n\n`;
