@@ -187,6 +187,12 @@ body {
     color: #666;
 }
 
+.level-desc-small {
+    font-size: 0.9rem;
+    color: #888;
+    font-style: italic;
+}
+
 /* Game Screen */
 .game-header {
     display: flex;
